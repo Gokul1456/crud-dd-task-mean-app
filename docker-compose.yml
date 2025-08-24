@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    image: gokul1114/mean-backend
+    container_name: backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      MONGO_URI: mongodb://root:rootpassword@mongo:27017/admin
+    depends_on:
+      - mongo
+
+  frontend:
+    image: gokul1114/mean-frontend
+    container_name: frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
+    
